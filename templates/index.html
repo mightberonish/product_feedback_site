@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Feedback</title>
+    <script>
+        function addFileInput() {
+            // Create a new file input element
+            var newInput = document.createElement("input");
+            newInput.type = "file";
+            newInput.name = "files";
+            newInput.accept = ".xlsx,.xls,.pdf,.docx,.txt";
+            newInput.classList.add("file-input");  // Optional: add a class for styling
+            
+            // Append the new input to the file input container
+            var container = document.getElementById("file-input-container");
+            container.appendChild(newInput);
+        }
+    </script>
+</head>
+<body>
+    <h1>Submit Product Feedback</h1>
+
+    <form id="feedback-form" method="post" enctype="multipart/form-data">
+        <!-- Text Feedback -->
+        <label for="feedback">Text Feedback:</label>
+        <textarea id="feedback" name="feedback" rows="4" cols="50" placeholder="Enter feedback here..."></textarea><br><br>
+
+        <!-- Initial File Upload Field -->
+        <div id="file-input-container">
+            <label for="files">Upload Files (Excel, PDF, Word):</label>
+            <input type="file" id="files" name="files" accept=".xlsx,.xls,.pdf,.docx,.txt"><br><br>
+        </div>
+
+        <!-- Button to add more file inputs -->
+        <button type="button" onclick="addFileInput()">Add More Files</button><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
