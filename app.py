@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for
-import openai
+import google.generativeai as genai
 import pandas as pd
 from docx import Document
 import PyPDF2
@@ -9,11 +9,12 @@ from dotenv import load_dotenv
 # Load environment variables from the .env file
 load_dotenv()
 
-# Get the API key from the environment variable
-openai.api_key = os.getenv('OPENAI_API_KEY')
+# Configure the Gemini API
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+if GOOGLE_API_KEY is None:
+    raise ValueError("Please set the GOOGLE_API_KEY environment variable in your .env file")
 
-if openai.api_key is None:
-    raise ValueError("Please set the OPENAI_API_KEY environment variable.")
+genai.configure(api_key=GOOGLE_API_KEY)
 
 app = Flask(__name__)
 
@@ -53,12 +54,9 @@ def process_pdf(file_path):
 # Function to get insights using OpenAI
 def get_insights(feedback, file_content):
     prompt = f"User feedback: {feedback}\nFile content: {file_content}\nProvide actionable product optimizations based on the above."
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt,
-        max_tokens=500
-    )
-    return response.choices[0].text
+    model = genai.GenerativeModel('gemini-2.0-flash')
+    response = model.generate_content(prompt)
+    return response.text
 
 # Route to handle file uploads and feedback processing
 @app.route('/upload', methods=['POST'])
@@ -69,6 +67,8 @@ def upload_file():
     all_file_content = ""
     
     for file in files:
+        if file.filename == '':
+            continue  # Skip files with no name
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(file_path)
         
