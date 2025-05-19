@@ -44,5 +44,3 @@ The app will be available at [http://localhost:5000](http://localhost:5000)
 - **API Key Errors:** Ensure your `.env` file is present and contains a valid `GOOGLE_API_KEY`.
 - **Port in Use:** If you see `OSError: [Errno 48] Address already in use`, stop other Flask servers or use a different port.
 
-## License
-MIT 
